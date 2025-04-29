@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid;
+    pid_t current_pid;
+    pid_t parent_pid;
+
+    // Get current process ID
+    current_pid = getpid();
+    printf("Current Process ID: %d\n", current_pid);
+
+    // Get parent process ID
+    parent_pid = getppid();
+    printf("Parent Process ID: %d\n", parent_pid);
+
+    // Create a new process
+    pid = fork();
+
+    if (pid < 0) {
+        // Error occurred
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        // Child process
+        printf("Child Process ID: %d\n", getpid());
+        printf("Parent Process ID (from child): %d\n", getppid());
+    } else {
+        // Parent process
+        printf("Parent Process ID (from parent): %d\n", getpid());
+        printf("Child Process ID: %d\n", pid);
+        wait(NULL); // Wait for child to finish
+    }
+
+    return 0;
+}
